@@ -1,6 +1,6 @@
 import React, {ReactElement, useState} from 'react';
 import './App.css';
-import {Button, DatePicker, Layout, List, Space, Timeline} from 'antd';
+import {Button, Col, DatePicker, Layout, List, Row, Space, Timeline} from 'antd';
 import { AutoComplete } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ArrowDownOutlined } from '@ant-design/icons';
@@ -59,38 +59,47 @@ const App: React.FC = () => {
       <div className="App">
         <Layout>
           <Header>
-            <Space size={"middle"}>
-              <AutoComplete
-                  value={from}
-                  options={options}
-                  style={{ width: 200 }}
-                  onSelect={onSelect}
-                  onSearch={onSearch}
-                  onChange={onFromChange}
-                  placeholder="From"
-              />
-              <AutoComplete
-                  value={to}
-                  options={options}
-                  style={{ width: 200 }}
-                  onSelect={onSelect}
-                  onSearch={onSearch}
-                  onChange={onToChange}
-                  placeholder="To"
-              />
-              <RangePicker />
-              <Button type="primary" icon={<SearchOutlined />}>
-                Search
-              </Button>
-            </Space>
+            <Row>
+              <Col span={20} offset={2}>
+                <Space size={"middle"}>
+                  <AutoComplete
+                      value={from}
+                      options={options}
+                      style={{ width: 300 }}
+                      onSelect={onSelect}
+                      onSearch={onSearch}
+                      onChange={onFromChange}
+                      placeholder="From"
+                  />
+                  <AutoComplete
+                      value={to}
+                      options={options}
+                      style={{ width: 300 }}
+                      onSelect={onSelect}
+                      onSearch={onSearch}
+                      onChange={onToChange}
+                      placeholder="To"
+                  />
+                  <RangePicker />
+                  <Button type="primary" icon={<SearchOutlined />}>
+                    Search
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
           </Header>
           <Content>
-            <List
-                size="large"
-                bordered
-                dataSource={data}
-                renderItem={item => getListItem(item)}
-            />
+            <Row>
+              <Col span={20} offset={2}>
+                <List
+                    size="large"
+                    header={"Search Results"}
+                    bordered
+                    dataSource={data}
+                    renderItem={item => getListItem(item)}
+                />
+              </Col>
+            </Row>
           </Content>
         </Layout>
       </div>
