@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen-code": "npx graphql-codegen --config codegen.yml",
-    "dev": "nodemon src/index.ts --inspect"
+    "dev": "nodemon src/index.ts --inspect",
+    "start": "ts-node src/index.js",
+    "build": "tsc -p ."
   },
   "keywords": [],
   "author": "",

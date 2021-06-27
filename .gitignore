@@ -4,6 +4,7 @@
 # dependencies
 /api-proxy/node_modules
 /front-end/node_modules
+/api-proxy/**/*/*.js
 /.pnp
 .pnp.js
 
