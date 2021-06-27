@@ -1,0 +1,22 @@
+extend type Query {
+    findFlight(flyFrom: String!, to: String!, dataFrom: String!, dateTo: String!): FlightList!
+}
+
+type FlightList {
+    search_id: ID!
+    currency: String!
+    data: [Flight]!
+}
+
+type Flight {
+    id: ID!
+    flyFrom: String!
+    flyTo: String!
+    cityFrom: String!
+    cityTo: String!
+    dTime: Int!
+    aTime: Int!
+    fly_duration: String!
+    price: Int!
+}
+

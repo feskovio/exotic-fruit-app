@@ -1,9 +1,9 @@
 extend type Query {
-    search(term: String!, location_types: String!): LocationsList!
+    findLocation(term: String!, location_types: String!): LocationsList!
 }
 
 type LocationsList {
-    locations: [Location!]
+    locations: [Location]!
     results_retrieved: Int!
 }
 

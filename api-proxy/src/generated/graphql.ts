@@ -20,6 +20,26 @@ export type City = {
   code: Scalars['String'];
 };
 
+export type Flight = {
+  __typename?: 'Flight';
+  id: Scalars['ID'];
+  flyFrom: Scalars['String'];
+  flyTo: Scalars['String'];
+  cityFrom: Scalars['String'];
+  cityTo: Scalars['String'];
+  dTime: Scalars['Int'];
+  aTime: Scalars['Int'];
+  fly_duration: Scalars['String'];
+  price: Scalars['Int'];
+};
+
+export type FlightList = {
+  __typename?: 'FlightList';
+  search_id: Scalars['ID'];
+  currency: Scalars['String'];
+  data: Array<Maybe<Flight>>;
+};
+
 export type Location = {
   __typename?: 'Location';
   id: Scalars['ID'];
@@ -28,18 +48,27 @@ export type Location = {
 
 export type LocationsList = {
   __typename?: 'LocationsList';
-  locations?: Maybe<Array<Location>>;
+  locations: Array<Maybe<Location>>;
   results_retrieved: Scalars['Int'];
 };
 
 export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
-  search: LocationsList;
+  findFlight: FlightList;
+  findLocation: LocationsList;
 };
 
 
-export type QuerySearchArgs = {
+export type QueryFindFlightArgs = {
+  flyFrom: Scalars['String'];
+  to: Scalars['String'];
+  dataFrom: Scalars['String'];
+  dateTo: Scalars['String'];
+};
+
+
+export type QueryFindLocationArgs = {
   term: Scalars['String'];
   location_types: Scalars['String'];
 };
@@ -125,9 +154,11 @@ export type ResolversTypes = {
   City: ResolverTypeWrapper<City>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Flight: ResolverTypeWrapper<Flight>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  FlightList: ResolverTypeWrapper<FlightList>;
   Location: ResolverTypeWrapper<Location>;
   LocationsList: ResolverTypeWrapper<LocationsList>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
@@ -137,9 +168,11 @@ export type ResolversParentTypes = {
   City: City;
   ID: Scalars['ID'];
   String: Scalars['String'];
+  Flight: Flight;
+  Int: Scalars['Int'];
+  FlightList: FlightList;
   Location: Location;
   LocationsList: LocationsList;
-  Int: Scalars['Int'];
   Query: {};
   Boolean: Scalars['Boolean'];
 };
@@ -151,6 +184,26 @@ export type CityResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FlightResolvers<ContextType = any, ParentType extends ResolversParentTypes['Flight'] = ResolversParentTypes['Flight']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  flyFrom?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  flyTo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  cityFrom?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  cityTo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  dTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  aTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  fly_duration?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FlightListResolvers<ContextType = any, ParentType extends ResolversParentTypes['FlightList'] = ResolversParentTypes['FlightList']> = {
+  search_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  currency?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  data?: Resolver<Array<Maybe<ResolversTypes['Flight']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LocationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   city?: Resolver<ResolversTypes['City'], ParentType, ContextType>;
@@ -158,18 +211,21 @@ export type LocationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type LocationsListResolvers<ContextType = any, ParentType extends ResolversParentTypes['LocationsList'] = ResolversParentTypes['LocationsList']> = {
-  locations?: Resolver<Maybe<Array<ResolversTypes['Location']>>, ParentType, ContextType>;
+  locations?: Resolver<Array<Maybe<ResolversTypes['Location']>>, ParentType, ContextType>;
   results_retrieved?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  search?: Resolver<ResolversTypes['LocationsList'], ParentType, ContextType, RequireFields<QuerySearchArgs, 'term' | 'location_types'>>;
+  findFlight?: Resolver<ResolversTypes['FlightList'], ParentType, ContextType, RequireFields<QueryFindFlightArgs, 'flyFrom' | 'to' | 'dataFrom' | 'dateTo'>>;
+  findLocation?: Resolver<ResolversTypes['LocationsList'], ParentType, ContextType, RequireFields<QueryFindLocationArgs, 'term' | 'location_types'>>;
 };
 
 export type Resolvers<ContextType = any> = {
   City?: CityResolvers<ContextType>;
+  Flight?: FlightResolvers<ContextType>;
+  FlightList?: FlightListResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   LocationsList?: LocationsListResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
