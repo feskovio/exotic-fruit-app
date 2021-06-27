@@ -1,5 +1,5 @@
-type Query {
-    search(term: String!, location_types: String! = airport): Location!
+extend type Query {
+    search(term: String!, location_types: String!): LocationsList!
 }
 
 type LocationsList {

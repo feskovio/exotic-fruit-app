@@ -34,7 +34,8 @@ export type LocationsList = {
 
 export type Query = {
   __typename?: 'Query';
-  search: Location;
+  _empty?: Maybe<Scalars['String']>;
+  search: LocationsList;
 };
 
 
@@ -163,7 +164,8 @@ export type LocationsListResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  search?: Resolver<ResolversTypes['Location'], ParentType, ContextType, RequireFields<QuerySearchArgs, 'term' | 'location_types'>>;
+  _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  search?: Resolver<ResolversTypes['LocationsList'], ParentType, ContextType, RequireFields<QuerySearchArgs, 'term' | 'location_types'>>;
 };
 
 export type Resolvers<ContextType = any> = {
