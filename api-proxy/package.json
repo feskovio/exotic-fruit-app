@@ -17,6 +17,7 @@
     "@graphql-codegen/cli": "1.21.5",
     "@graphql-codegen/typescript": "1.22.3",
     "@graphql-codegen/typescript-resolvers": "1.19.4",
+    "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
     "@types/lodash": "^4.14.170",
     "@types/node-fetch": "^2.5.10",
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.25.2",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql-import-node": "0.0.4",
     "lodash": "^4.17.21",
