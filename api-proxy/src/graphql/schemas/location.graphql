@@ -1,0 +1,22 @@
+type Query {
+    search(term: String!, location_types: String! = airport): Location!
+}
+
+type LocationsList {
+    locations: [Location!]
+    results_retrieved: Int!
+}
+
+type Location {
+    id: ID!
+    city: City!
+}
+
+type City {
+    id: ID!
+    name: String!
+    code: String!
+}
+
+
+

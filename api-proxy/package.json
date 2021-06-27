@@ -1,0 +1,25 @@
+{
+  "name": "api-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gen-code": "npx graphql-codegen --config codegen.yml"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.21.5",
+    "@graphql-codegen/typescript": "1.22.3",
+    "@graphql-codegen/typescript-resolvers": "1.19.4",
+    "@types/node-fetch": "^2.5.10",
+    "graphql": "^15.5.1",
+    "graphql-tools": "^7.0.5",
+    "typescript": "^4.3.4"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
