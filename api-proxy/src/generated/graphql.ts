@@ -63,7 +63,7 @@ export type Query = {
 export type QueryFindFlightArgs = {
   flyFrom: Scalars['String'];
   to: Scalars['String'];
-  dataFrom: Scalars['String'];
+  dateFrom: Scalars['String'];
   dateTo: Scalars['String'];
 };
 
@@ -218,7 +218,7 @@ export type LocationsListResolvers<ContextType = any, ParentType extends Resolve
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  findFlight?: Resolver<ResolversTypes['FlightList'], ParentType, ContextType, RequireFields<QueryFindFlightArgs, 'flyFrom' | 'to' | 'dataFrom' | 'dateTo'>>;
+  findFlight?: Resolver<ResolversTypes['FlightList'], ParentType, ContextType, RequireFields<QueryFindFlightArgs, 'flyFrom' | 'to' | 'dateFrom' | 'dateTo'>>;
   findLocation?: Resolver<ResolversTypes['LocationsList'], ParentType, ContextType, RequireFields<QueryFindLocationArgs, 'term' | 'location_types'>>;
 };
 

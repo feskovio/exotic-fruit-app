@@ -7,8 +7,9 @@ const BASE_URL = "https://api.skypicker.com/flights?v=3&partner=skypicker&locale
 export const FlightResolver: IResolvers = {
     Query: {
         async findFlight(_: void, args: QueryFindFlightArgs): Promise<LocationsList> {
-            const { flyFrom, to, dataFrom, dateTo} = args;
-            const response = await fetch(`${BASE_URL}&flyFrom=${flyFrom}&to=${to}&dateFrom=${dataFrom}&dateTo=${dateTo}`);
+            const { flyFrom, to, dateFrom, dateTo} = args;
+            console.log(args);
+            const response = await fetch(`${BASE_URL}&flyFrom=${flyFrom}&to=${to}&dateFrom=${dateFrom}&dateTo=${dateTo}`);
             return await response.json();
         }
     }

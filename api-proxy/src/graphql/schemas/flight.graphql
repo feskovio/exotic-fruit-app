@@ -1,5 +1,5 @@
 extend type Query {
-    findFlight(flyFrom: String!, to: String!, dataFrom: String!, dateTo: String!): FlightList!
+    findFlight(flyFrom: String!, to: String!, dateFrom: String!, dateTo: String!): FlightList!
 }
 
 type FlightList {
