@@ -1,73 +1,50 @@
-import React, {ReactElement, useState} from 'react';
+import React, {useState} from 'react';
+import * as moment from 'moment';
 import './App.css';
-import {Button, Col, DatePicker, Layout, List, Row, Space, Timeline} from 'antd';
+import {Button, Col, DatePicker, Empty, Layout, Row, Space} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
-import {ArrowDownOutlined} from '@ant-design/icons';
 import {
     ApolloProvider,
     ApolloClient,
-    InMemoryCache,
-    useQuery,
-    gql
+    InMemoryCache
 } from "@apollo/client";
-import LocationPicker from './components/location/LocationPicker';
+import LocationPicker, {AutoCompleteOption} from './components/location/LocationPicker';
+import {FlightList, FlightSearchArgs, isSearchReady} from './components/flight-list/FlightList';
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000/graphql',
     cache: new InMemoryCache()
 });
 
-const {Header, Footer, Sider, Content} = Layout;
+const {Header, Content} = Layout;
 const {RangePicker} = DatePicker;
 
-const mockVal = (str: string, repeat: number = 1) => ({
-    value: str.repeat(repeat),
-});
-
-const mockData = [
-    'Racing car sprays burning fuel into crowd.',
-    'Japanese princess to wed commoner.',
-    'Australian walks 100km after outback crash.',
-    'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.',
-];
-
-interface QueryFindLocationArgs {
-    term: string;
-    location_types: string;
-}
-
-interface LocationsList {
-    locations: Location[];
-    results_retrieved: number;
-}
-
-interface Location {
-    id: string;
-    city: City;
-}
-
-interface City {
-    id: string;
-    name: string;
-    code: string;
-}
-
 const App: React.FC = () => {
-    const [from, setFrom] = useState('');
-    const [to, setTo] = useState('');
-    const [options, setOptions] = useState<{ value: string }[]>([]);
+    const initialState: FlightSearchArgs = {dateFrom: "", dateTo: "", flyFrom: "", to: ""};
+    const [
+        intermediateSearchProps,
+        setIntermediateSearchProps
+    ] = useState<FlightSearchArgs>(initialState);
+    const [
+        searchProps,
+        setSearchProps
+    ] = useState<FlightSearchArgs>(initialState);
 
-    const ListItem = (label: string): ReactElement => {
-        return <List.Item>
-            <Timeline mode="left">
-                <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-                <Timeline.Item dot={<ArrowDownOutlined style={{fontSize: '16px'}}/>}>
-                    {label}
-                </Timeline.Item>
-                <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-            </Timeline>
-        </List.Item>
+    const handleSetFrom = (opt: AutoCompleteOption): void => setIntermediateSearchProps((prevState => ({...prevState, flyFrom: opt.value})));
+    const handleSetTo = (opt: AutoCompleteOption): void => setIntermediateSearchProps((prevState => ({...prevState, to: opt.value})));
+    const handleSetRange = (dates: moment.Moment[]): void => {
+        if(!dates?.length) {
+            setIntermediateSearchProps((prevState => ({...prevState, dateFrom: '', dateTo: ''})));
+            return;
+        }
+        const [ dateFrom, dateTo ] = dates?.map(d => encodeURIComponent(d.format('DD/MM/YYYY')));
+        setIntermediateSearchProps((prevState => ({...prevState, dateFrom, dateTo})));
+    };
+
+    const handleSearch = () => {
+        if(isSearchReady(intermediateSearchProps)) {
+            setSearchProps(intermediateSearchProps);
+        }
     };
 
     return (
@@ -78,10 +55,10 @@ const App: React.FC = () => {
                         <Row>
                             <Col span={20} offset={2}>
                                 <Space size={"middle"}>
-                                    <LocationPicker />
-                                    <LocationPicker />
-                                    <RangePicker/>
-                                    <Button type="primary" icon={<SearchOutlined/>}>
+                                    <LocationPicker placeHolder="From" onLocationSelected={handleSetFrom}/>
+                                    <LocationPicker placeHolder="To" onLocationSelected={handleSetTo}/>
+                                    <RangePicker onChange={handleSetRange}/>
+                                    <Button type="primary" icon={<SearchOutlined/>} onClick={handleSearch}>
                                         Search
                                     </Button>
                                 </Space>
@@ -89,17 +66,7 @@ const App: React.FC = () => {
                         </Row>
                     </Header>
                     <Content>
-                        <Row>
-                            <Col span={20} offset={2}>
-                                <List
-                                    size="large"
-                                    header={"Search Results"}
-                                    bordered
-                                    dataSource={mockData}
-                                    renderItem={item => ListItem(item)}
-                                />
-                            </Col>
-                        </Row>
+                        { isSearchReady(searchProps) ? <FlightList {...searchProps} /> : <Empty />}
                     </Content>
                 </Layout>
             </div>

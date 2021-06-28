@@ -1,83 +1,91 @@
 import {AutoComplete} from 'antd';
-import React, { useState} from 'react';
-import { gql } from '@apollo/client';
+import {DataSourceItemObject} from "antd/lib/auto-complete"
+import React, {useState} from 'react';
+import {gql} from '@apollo/client';
 import client from '../../graphql/client/client';
 
-export interface LocationPickerProps {
-    onLocationSelected?: Function
+export interface FindLocationResult {
+    findLocation: LocationsList;
 }
 
-interface Location {
+export interface LocationsList {
+    locations: Location[];
+}
+
+export interface Location {
     id: string;
     city: City;
 }
 
-interface City {
+export interface City {
     id: string;
     name: string;
     code: string;
 }
 
+export interface AutoCompleteOption {
+    value: string;
+    label: string;
+}
+
+export interface LocationPickerProps {
+    onLocationSelected?: (option: AutoCompleteOption) => void;
+    placeHolder?: string;
+}
+
 export function LocationPicker(props: LocationPickerProps): React.ReactElement {
-        const [ value, setValue] = useState("");
-        const [options, setOptions] = useState<{ value: string }[]>([]);
-
-    const mockVal = (str: string, repeat: number = 1) => ({
-        value: str.repeat(repeat),
-    });
-
-    const onChange = (data: string) => {
-        setValue(data);
-    };
-        const OnSearch = (searchText: string) => {
-            setOptions(
-                !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)],
-            );
+    const [value, setValue] = useState("");
+    const [options, setOptions] = useState<AutoCompleteOption[]>([]);
 
 
-            if(searchText.length < 3) {
-                //setOptions([]);
-            } else {
-                client
-                .query({
-                    query: gql`
-                        query {
-                            findLocation(term: "${searchText}", location_types: "airport") {
-                                locations {
-                                    id,
-                                    city {
-                                        id, name, code
-                                    }
+    const onSearch = (searchText: string) => {
+        if (searchText?.length) {
+            client
+            .query({
+                query: gql`
+                    query {
+                        findLocation(term: "${searchText}", location_types: "airport") {
+                            locations {
+                                id,
+                                city {
+                                    id, name, code
                                 }
                             }
                         }
-                    `
-                })
-                .then(result => {
-                    const results = result.data.findLocation.locations
-                        .filter((loc: Location, pos: number, arr: Location[]) => arr.indexOf(loc) === pos)
-                        .map((loc: Location, i: number) => ({ value: `${loc.city.name} (${loc.id})` }));
-                    setOptions(results);
-                });
-            }
-        };
+                    }
+                `
+            })
+            .then(({ data }: { data: FindLocationResult }) => {
+                const locations: Location[] = data?.findLocation?.locations;
+                const uniqueOptions = locations
+                    //.filter((loc: Location, pos: number, arr: Location[]) => arr.indexOf(loc) === pos)
+                    .map((loc: Location, i: number) => ({value: `${loc.city.id}`, label: `${loc.city.name} (${loc.id})`, key: i}));
+                setOptions(uniqueOptions);
+            });
+        }
+    };
 
-        const onSelect = (data: string) => {
-            console.log('onSelect', data);
-        };
+    const onSelect = (value: string, option: AutoCompleteOption) => {
+        setValue(option.label);
+        props.onLocationSelected?.(option);
+    };
 
-        return (
-            <AutoComplete
-                value={value}
-                options={options}
-                style={{width: 300}}
-                onSelect={onSelect}
-                onSearch={OnSearch}
-                onChange={onChange}
-                placeholder="From"
-            />
-        );
+    const onChange = (value: string) => {
+        setValue(value);
+    };
 
+    return (
+        <AutoComplete
+            value={value}
+            options={options}
+            style={{width: 300}}
+            // @ts-ignore
+            onSelect={onSelect}
+            onSearch={onSearch}
+            onChange={onChange}
+            placeholder={props.placeHolder || "Start typing..."}
+        />
+    );
 }
 
 export default LocationPicker;
