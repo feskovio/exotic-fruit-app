@@ -1,26 +1,9 @@
 import {AutoComplete} from 'antd';
 import React, {useState} from 'react';
-import {gql} from '@apollo/client';
 import client from '../../graphql/client/client';
-
-export interface FindLocationResult {
-    findLocation: LocationsList;
-}
-
-export interface LocationsList {
-    locations: Location[];
-}
-
-export interface Location {
-    id: string;
-    city: City;
-}
-
-export interface City {
-    id: string;
-    name: string;
-    code: string;
-}
+import {Query, Location} from '../../types/generated/graphql';
+import {Maybe} from 'graphql/jsutils/Maybe';
+import {FIND_LOCATION} from '../../graphql/location.gql';
 
 export interface AutoCompleteOption {
     value: string;
@@ -36,29 +19,21 @@ export function LocationPicker(props: LocationPickerProps): React.ReactElement {
     const [value, setValue] = useState("");
     const [options, setOptions] = useState<AutoCompleteOption[]>([]);
 
-
     const onSearch = (searchText: string) => {
         if (searchText?.length) {
             client
             .query({
-                query: gql`
-                    query {
-                        findLocation(term: "${searchText}", location_types: "airport") {
-                            locations {
-                                id,
-                                city {
-                                    id, name, code
-                                }
-                            }
-                        }
-                    }
-                `
+                query: FIND_LOCATION,
+                variables: { searchText }
             })
-            .then(({ data }: { data: FindLocationResult }) => {
-                const locations: Location[] = data?.findLocation?.locations;
+            .then(({ data }: { data: Query }) => {
+                const locations = data?.findLocation?.locations;
                 const uniqueOptions = locations
-                    //.filter((loc: Location, pos: number, arr: Location[]) => arr.indexOf(loc) === pos)
-                    .map((loc: Location, i: number) => ({value: `${loc.city.id}`, label: `${loc.city.name} (${loc.id})`, key: i}));
+                    .map((loc: Maybe<Location>, i: number) => ({
+                        value: `${loc?.city.id}`,
+                        label: `${loc?.city.name} (${loc?.id})`,
+                        key: i
+                    }));
                 setOptions(uniqueOptions);
             });
         }

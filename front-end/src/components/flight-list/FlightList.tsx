@@ -3,7 +3,7 @@ import {Col, List, Row, Spin, Timeline} from 'antd';
 import {ArrowDownOutlined} from '@ant-design/icons';
 import { useQuery } from "@apollo/client";
 import {FIND_FLIGHT} from '../../graphql/flight-list.gql';
-import {Flight, QueryFindFlightArgs, Query} from '../../generated/graphql';
+import {Flight, QueryFindFlightArgs, Query} from '../../types/generated/graphql';
 
 
 export const isSearchReady = (args: QueryFindFlightArgs) => Object.keys(args)

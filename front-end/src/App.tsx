@@ -10,7 +10,7 @@ import {
 } from "@apollo/client";
 import LocationPicker, {AutoCompleteOption} from './components/location/LocationPicker';
 import {FlightList, isSearchReady} from './components/flight-list/FlightList';
-import {QueryFindFlightArgs} from './generated/graphql';
+import {QueryFindFlightArgs} from './types/generated/graphql';
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000/graphql',
