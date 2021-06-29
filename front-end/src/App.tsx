@@ -3,25 +3,23 @@ import * as moment from 'moment';
 import './App.css';
 import {Button, Col, DatePicker, Empty, Layout, Row, Space} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
-import {
-    ApolloProvider,
-    ApolloClient,
-    InMemoryCache
-} from "@apollo/client";
+import {ApolloProvider} from "@apollo/client";
 import LocationPicker, {AutoCompleteOption} from './components/location/LocationPicker';
 import {FlightList, isSearchReady} from './components/flight-list/FlightList';
 import {QueryFindFlightArgs} from './types/generated/graphql';
+import client from './graphql/client/client';
 
-const client = new ApolloClient({
-    uri: 'http://localhost:4000/graphql',
-    cache: new InMemoryCache()
-});
 
 const {Header, Content} = Layout;
 const {RangePicker} = DatePicker;
 
 const App: React.FC = () => {
-    const initialState: QueryFindFlightArgs = {dateFrom: "", dateTo: "", flyFrom: "", to: ""};
+    const initialState: QueryFindFlightArgs = {
+        dateFrom: "",
+        dateTo: "",
+        flyFrom: "",
+        to: ""
+    };
     const [
         intermediateSearchProps,
         setIntermediateSearchProps
@@ -31,19 +29,25 @@ const App: React.FC = () => {
         setSearchProps
     ] = useState<QueryFindFlightArgs>(initialState);
 
-    const handleSetFrom = (opt: AutoCompleteOption): void => setIntermediateSearchProps((prevState => ({...prevState, flyFrom: opt.value})));
-    const handleSetTo = (opt: AutoCompleteOption): void => setIntermediateSearchProps((prevState => ({...prevState, to: opt.value})));
+    const handleSetFrom = (opt: AutoCompleteOption): void => setIntermediateSearchProps((prevState => ({
+        ...prevState,
+        flyFrom: opt.value
+    })));
+    const handleSetTo = (opt: AutoCompleteOption): void => setIntermediateSearchProps((prevState => ({
+        ...prevState,
+        to: opt.value
+    })));
     const handleSetRange = (dates: moment.Moment[]): void => {
-        if(!dates?.length) {
+        if (!dates?.length) {
             setIntermediateSearchProps((prevState => ({...prevState, dateFrom: '', dateTo: ''})));
             return;
         }
-        const [ dateFrom, dateTo ] = dates?.map(d => encodeURIComponent(d.format('DD/MM/YYYY')));
+        const [dateFrom, dateTo] = dates?.map(d => encodeURIComponent(d.format('DD/MM/YYYY')));
         setIntermediateSearchProps((prevState => ({...prevState, dateFrom, dateTo})));
     };
 
     const handleSearch = () => {
-        if(isSearchReady(intermediateSearchProps)) {
+        if (isSearchReady(intermediateSearchProps)) {
             setSearchProps(intermediateSearchProps);
         }
     };
@@ -69,7 +73,7 @@ const App: React.FC = () => {
                         </Row>
                     </Header>
                     <Content>
-                        { isSearchReady(searchProps) ? <FlightList {...searchProps} /> : <Empty />}
+                        {isSearchReady(searchProps) ? <FlightList {...searchProps} /> : <Empty/>}
                     </Content>
                 </Layout>
             </div>
