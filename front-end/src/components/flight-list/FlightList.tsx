@@ -1,5 +1,5 @@
 import React, {ReactElement} from 'react';
-import {Alert, Col, List, Row, Spin, Timeline, Typography} from 'antd';
+import {Alert, Col, List, Row, Skeleton, Timeline, Typography} from 'antd';
 import {ClockCircleOutlined} from '@ant-design/icons';
 import { useQuery } from "@apollo/client";
 import {FIND_FLIGHT} from '../../graphql/flight-list.gql';
@@ -7,7 +7,6 @@ import {Flight, QueryFindFlightArgs, Query} from '../../types/generated/graphql'
 import moment from 'moment';
 
 const {Text} = Typography;
-
 
 export const isSearchReady = (args: QueryFindFlightArgs) => Object.keys(args)
     .every(key => Boolean(args[key as keyof QueryFindFlightArgs]));
@@ -23,7 +22,7 @@ export function FlightList(props: QueryFindFlightArgs): React.ReactElement {
     const ListItem = (flight: Flight, currency: string = "EUR"): ReactElement => {
         return <List.Item>
             <List.Item.Meta
-                title={<Alert message={`${flight.price} ${currency}`} type="info" showIcon />}
+                title={<Alert message={`${flight.price} ${currency}`} type="info" />}
                 description={
                     <div style={{"margin": "10px"}}>
                         <Timeline mode="left">
@@ -47,13 +46,12 @@ export function FlightList(props: QueryFindFlightArgs): React.ReactElement {
                 {
                     isSearchReady(props) && data?.findFlight?.data ?
                         <List
-                            size="large"
                             header={<h4>Search Results</h4>}
                             bordered
                             dataSource={data.findFlight.data}
                             renderItem={item => item ? ListItem(item, data.findFlight.currency) : null}
                         />
-                        : (loading && <Spin />)
+                        : (loading && <Skeleton />)
                 }
             </Col>
         </Row>
