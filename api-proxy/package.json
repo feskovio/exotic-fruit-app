@@ -8,7 +8,7 @@
     "gen-code": "npx graphql-codegen --config codegen.yml",
     "dev": "nodemon src/index.ts --inspect",
     "start": "ts-node src/index.js",
-    "build": "tsc -p ."
+    "build": "npx tsc -p ."
   },
   "keywords": [],
   "author": "",

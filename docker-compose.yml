@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  api-proxy:
+    build:
+      context: ./api-proxy
+      dockerfile: ./Dockerfile
+    ports:
+      - "4000:4000"
+  front-end:
+    build:
+      context: ./front-end
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - "api-proxy"

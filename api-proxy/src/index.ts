@@ -3,7 +3,7 @@ import cors from 'cors';
 import { ApolloServer} from 'apollo-server-express';
 import schema from './graphql/schemasMap';
 
-const PORT  = 4000;
+const PORT = 4000;
 
 const app = express();
 const options: cors.CorsOptions = {
