@@ -1,5 +1,4 @@
 import {AutoComplete} from 'antd';
-import {DataSourceItemObject} from "antd/lib/auto-complete"
 import React, {useState} from 'react';
 import {gql} from '@apollo/client';
 import client from '../../graphql/client/client';

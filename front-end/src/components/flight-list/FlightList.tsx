@@ -1,67 +1,18 @@
 import React, {ReactElement, useState} from 'react';
 import {Col, List, Row, Spin, Timeline} from 'antd';
 import {ArrowDownOutlined} from '@ant-design/icons';
-import {
-    useQuery,
-    gql
-} from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import {FIND_FLIGHT} from '../../graphql/flight-list.gql';
+import {Flight, QueryFindFlightArgs, Query} from '../../generated/graphql';
 
-interface FlightSearchResult {
-    findFlight: FlightList;
-}
 
-interface FlightList {
-    search_id: string;
-    currency: string
-    data: Flight[];
-}
+export const isSearchReady = (args: QueryFindFlightArgs) => Object.keys(args)
+    .every(key => Boolean(args[key as keyof QueryFindFlightArgs]));
 
-interface Flight {
-    id: string;
-    flyFrom: string;
-    flyTo: string;
-    cityFrom: string;
-    cityTo: string;
-    dTime: number;
-    aTime: number;
-    fly_duration: string;
-    price: number;
-}
+export function FlightList(props: QueryFindFlightArgs): React.ReactElement {
 
-export interface FlightSearchArgs {
-    flyFrom: string;
-    to: string;
-    dateFrom: string;
-    dateTo: string;
-}
-
-export const isSearchReady = (args: FlightSearchArgs) => Object.keys(args)
-    .every(key => Boolean(args[key as keyof FlightSearchArgs]));
-
-export function FlightList(props: FlightSearchArgs): React.ReactElement {
-
-    const FIND_FLIGHT = gql`
-        query FindFlight($flyFrom: String!, $to: String!, $dateFrom: String!, $dateTo: String!) {
-            findFlight(flyFrom: $flyFrom, to: $to, dateFrom: $dateFrom, dateTo: $dateTo) {
-                currency,
-                data {
-                    id,
-                    flyFrom,
-                    flyTo,
-                    cityFrom,
-                    cityTo,
-                    dTime,
-                    aTime,
-                    fly_duration,
-                    price
-                }
-            }
-        }
-    `;
-
-    const {loading, data} = useQuery<FlightSearchResult, FlightSearchArgs>(
-        FIND_FLIGHT,
-        {variables: {...props}}
+    const {loading, data} = useQuery<Query, QueryFindFlightArgs>(
+        FIND_FLIGHT, {variables: {...props}}
     );
 
     const ListItem = (flight: Flight): ReactElement => {
@@ -86,7 +37,7 @@ export function FlightList(props: FlightSearchArgs): React.ReactElement {
                             header={"Search Results"}
                             bordered
                             dataSource={data.findFlight.data}
-                            renderItem={item => ListItem(item)}
+                            renderItem={item => item ? ListItem(item) : null}
                         />
                         : (loading && <Spin />)
                 }
