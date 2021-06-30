@@ -15,5 +15,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: "/graphql" });
 app.listen(PORT, () => {
-    console.log(`App is running on ${PORT} port!!!`);
+    console.log(`Front-end App is running on 3000 port (http://localhost:3000)`);
+    console.log(`Back-end App is running on ${PORT} port (http://localhost:4000)`);
 });

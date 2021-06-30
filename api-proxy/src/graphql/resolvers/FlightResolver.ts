@@ -8,7 +8,6 @@ export const FlightResolver: IResolvers = {
     Query: {
         async findFlight(_: void, args: QueryFindFlightArgs): Promise<LocationsList> {
             const { flyFrom, to, dateFrom, dateTo} = args;
-            console.log(args);
             const response = await fetch(`${BASE_URL}&flyFrom=${flyFrom}&to=${to}&dateFrom=${dateFrom}&dateTo=${dateTo}`);
             return await response.json();
         }
