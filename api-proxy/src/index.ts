@@ -7,9 +7,9 @@ const PORT = 4000;
 
 const app = express();
 const options: cors.CorsOptions = {
-    origin: "*"
+    origin: [ 'http://localhost:8080' ]
 };
-app.use(cors(options));
+app.use(cors());
 app.use(express.json());
 
 const server = new ApolloServer({
@@ -18,5 +18,5 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: "/graphql" });
 app.listen(PORT, () => {
-    console.log(`App is running on ${PORT} port!`);
+    console.log(`App is running on ${PORT} port!!!`);
 });
