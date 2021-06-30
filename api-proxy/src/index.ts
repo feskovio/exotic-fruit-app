@@ -6,9 +6,6 @@ import schema from './graphql/schemasMap';
 const PORT = 4000;
 
 const app = express();
-const options: cors.CorsOptions = {
-    origin: [ 'http://localhost:8080' ]
-};
 app.use(cors());
 app.use(express.json());
 
